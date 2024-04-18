@@ -1,7 +1,6 @@
 package com.example.netdownload.ui.screens
 
 import android.widget.ImageView
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,9 +18,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.netdownload.R
@@ -42,7 +40,7 @@ fun NetScreen(viewModel: NetViewModel) {
     val imageUrl by viewModel.imageUrl.observeAsState()
 
     LaunchedEffect(webPageContent) {
-        // Observa los cambios en webPageContent y actualiza showText y showImage
+        // Look changes on txt
         webPageContent?.let {
             showText = true
             showImage = false
@@ -50,7 +48,7 @@ fun NetScreen(viewModel: NetViewModel) {
     }
 
     LaunchedEffect(imageUrl) {
-        // Observa los cambios en imageUrl y actualiza showImage
+        // Look changes on image
         imageUrl?.let {
             showText = false
             showImage = true
@@ -68,20 +66,20 @@ fun NetScreen(viewModel: NetViewModel) {
             Button(onClick = {
                 viewModel.downloadWebPage()
             }) {
-                Text(text = "Download web page")
+                Text(text = stringResource(R.string.download_web_page))
             }
             Button(onClick = {
                 showText = false
                 showImage = true
                 viewModel.setImageUrl("https://s.inyourpocket.com/gallery/113383.jpg")
             }) {
-                Text(text = "Download image")
+                Text(text = stringResource(R.string.download_image))
             }
         }
 
         if (showText) {
             Text(
-                text = webPageContent ?: "Texto aquí",
+                text = webPageContent ?: stringResource(R.string.error),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
