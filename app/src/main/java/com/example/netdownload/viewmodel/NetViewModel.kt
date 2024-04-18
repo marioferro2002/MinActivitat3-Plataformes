@@ -1,12 +1,19 @@
 package com.example.netdownload.viewmodel
 
+import WebImageService
 import android.app.Application
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
+import android.widget.ImageView
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide
 import com.example.netdownload.util.WebPageService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -20,7 +27,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 class NetViewModel(application: Application) : AndroidViewModel(application) {
 
     // URL base para las solicitudes
-    private val BASE_URL = "https://circuitotormenta.com/"
+    private val BASE_URL = "https://cv.udl.cat/portal/"
 
     // Retrofit instancia para realizar solicitudes HTTP
     private val retrofit = Retrofit.Builder()
@@ -34,6 +41,7 @@ class NetViewModel(application: Application) : AndroidViewModel(application) {
     // LiveData para manejar el resultado de la descarga de la página web
     val webPageContent = MutableLiveData<String?>()
 
+
     // Función para descargar la página web
     fun downloadWebPage() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -41,7 +49,8 @@ class NetViewModel(application: Application) : AndroidViewModel(application) {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     if (response.isSuccessful) {
                         val content = response.body()
-                        webPageContent.postValue(content)
+                        webPageContent.setValue(content)
+
                     } else {
                         webPageContent.postValue("error al agafar url")
                     }
@@ -53,4 +62,21 @@ class NetViewModel(application: Application) : AndroidViewModel(application) {
             })
         }
     }
+
+
+    val imageUrl = MutableLiveData<String?>()
+
+    // Función para establecer la URL de la imagen
+    fun setImageUrl(url: String) {
+        imageUrl.value = url
+    }
+
+    // Función para descargar la imagen y cargarla en la vista
+    fun downloadAndSetImage(url: String, imageView: ImageView) {
+        Glide.with(imageView.context.applicationContext)
+            .load(url)
+            .into(imageView)
+    }
+
+
 }
